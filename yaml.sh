@@ -38,4 +38,14 @@ function main () {
   yaml_to_bash_vars $1
 }
 
-main $@
+# from here is for bpkg
+function yaml () {
+  #main $@
+}
+
+if [[ ${BASH_SOURCE[0]} != $0 ]]; then
+  export -f yaml
+else
+  yaml ${@}
+  exit $?
+fi
