@@ -26,23 +26,35 @@ function parse_yaml() {
 }
  
 function yaml_to_bash_vars () {
-  vars=$(parse_yaml $1)
-  echo $vars
+  params=$(parse_yaml $1)
+  #echo $vars
   sleep 1
-  for var in $vars; do
-    echo $var
+  for var in $params; do
+    #echo $var
+    # this take the name of the parameters
+    param=$(echo $var | cut -d\= -f1)
+    value=$(echo $var | cut -d\= -f2)
+    echo $param=$value
+    # probar cambiar declare con eval
+    # https://stackoverflow.com/questions/9871458/declaring-global-variable-inside-a-function
+    declare -x $param=$value
+    #declare $var
   done
+  echo "infunc \$development_adapter: "$development_adapter
 }
 
 function main () {
   yaml_to_bash_vars $1
+  echo "outfunc \$development_adapter: "$development_adapter
 }
 
 # from here is for bpkg
 function yaml () {
-  #main $@
+  main $@
 }
 
+yaml $@
+exit
 if [[ ${BASH_SOURCE[0]} != $0 ]]; then
   export -f yaml
 else
